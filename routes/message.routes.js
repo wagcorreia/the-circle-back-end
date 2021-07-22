@@ -15,20 +15,19 @@ router.post(
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { messagebody } = req.body
+      const { messagebody, userId_received } = req.body
 
       const loggedInUser = req.currentUser
-
-      const lastInsertedMessage = await MessageModel.findOne(
-        {},
-        { messagebody: 1, _id: 0 },
-        { sort: { messagebody: -1 }, limit: 1 },
-      )
 
       const newMessage = await MessageModel.create({
         userId_sending: loggedInUser._id,
         messagebody: messagebody,
+        userId_received,
       })
+      await UserModel.findOneAndUpdate(
+        { _id: userId_received },
+        { $push: { messengerID: newMessage._id } },
+      )
 
       return res.status(201).json(newMessage)
     } catch (err) {
@@ -48,6 +47,34 @@ router.get(
       const message = await MessageModel.findOne({
         _id: id,
       })
+
+      return res.status(200).json(message)
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
+router.delete(
+  '/message/:id',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+
+      const messageReceived = MessageModel.findOne({ _id: id })
+
+      const { userId_received } = messageReceived
+
+      const message = await MessageModel.deleteOne({
+        _id: id,
+      })
+
+      await UserModel.findOneAndUpdate(
+        { _id: userId_received },
+        { $pull: { messengerID: id } },
+      )
 
       return res.status(200).json(message)
     } catch (err) {

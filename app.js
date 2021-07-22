@@ -15,8 +15,8 @@ app.use('/api', userRouter)
 const messageRouter = require('./routes/message.routes')
 app.use('/api', messageRouter)
 
-const postRouter = require('./routes/post.routes')
-app.use('/api', postRouter)
+// const postRouter = require('./routes/post.routes')
+// app.use('/api', postRouter)
 
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`),

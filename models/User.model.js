@@ -18,9 +18,9 @@ const UserSchema = new Schema({
   age: { type: Number, required: true },
   phoneNumber: { type: String, trim: true },
 
-  messengerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
+  messengerID: { type: [mongoose.Schema.Types.ObjectId], ref: 'Message' },
 
-  postID: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+  postID: { type: [mongoose.Schema.Types.ObjectId], ref: 'Post' },
 })
 
 const UserModel = model('User', UserSchema)
