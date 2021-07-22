@@ -12,23 +12,15 @@ const UserSchema = new Schema({
   },
   passwordHash: { type: String, required: true },
   occupation: { type: String, required: true },
-  address: new Schema({
-    street: String,
-    neighbourhood: String,
-    city: String,
-    state: String,
-    postalCode: String,
-    number: String,
-  }),
+  location: { type: String },
 
-  CertificatesTerapies: [String],
-  birthDate: { type: Date, required: true },
+  certificatesTerapies: [String],
+  age: { type: Number, required: true },
   phoneNumber: { type: String, trim: true },
-  documentCPF: { type: String, required: true, trim: true },
 
-  MessengerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
+  messengerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
 
-  PostID: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+  postID: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
 })
 
 const UserModel = model('User', UserSchema)
