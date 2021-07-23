@@ -26,12 +26,16 @@ router.post(
       })
       console.log(newMessage)
 
-      await UserModel.findOneAndUpdate(
+      const updateddeletedMessage = await UserModel.findOneAndUpdate(
         { _id: userId_received },
         { $push: { messengerID: newMessage._id } },
       )
 
-      return res.status(201).json(newMessage)
+      if (updateddeletedMessage) {
+        return res.status(200).json(updateddeletedMessage)
+      }
+
+      return res.status(201).json(updateddeletedMessage)
     } catch (err) {
       next(err)
     }
@@ -72,6 +76,9 @@ router.delete(
       const message = await MessageModel.deleteOne({
         _id: id,
       })
+      if (message.n > 0) {
+        return res.status(200).json({})
+      }
 
       await UserModel.findOneAndUpdate(
         { _id: userId_received },

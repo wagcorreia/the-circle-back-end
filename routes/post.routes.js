@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 const saltRounds = 10
-
 const PostModel = require('../models/Post.model')
 
 const isAuthenticated = require('../middlewares/isAuthenticated')
@@ -50,41 +49,39 @@ router.get(
         _id: id,
       })
 
-      return res.status(200).json(post)
+      if (post) {
+        return res.status(200).json(post)
+      }
+      return res.status(404).json({ error: 'post nâo encontrado' })
     } catch (err) {
       next(err)
     }
   },
 )
 
-//   router.delete(
-//     '/message/:id',
-//     isAuthenticated,
-//     attachCurrentUser,
-//     async (req, res, next) => {
-//       try {
-//         const { id } = req.params
+router.delete(
+  '/post/:id',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
 
-//         const messageReceived = PostModel.findOne({ _id: id })
+      const post = await PostModel.deleteOne({
+        _id: id,
+      })
+      console.log(post)
 
-//         const { userId_received } = messageReceived
+      if (post.n > 0) {
+        return res.status(200).json({})
+      }
+      console.log(post)
 
-//         const message = await PostModel.deleteOne({
-//           _id: id,
-//         })
-//         console.log(message)
-
-//         const findmessage = await UserModel.findOneAndUpdate(
-//           { _id: userId_received },
-//           { $pull: { messengerID: id } },
-//         )
-//         console.log(findmessage)
-
-//         return res.status(200).json(message)
-//       } catch (err) {
-//         next(err)
-//       }
-//     },
-//   )
+      return res.status(200).json(post)
+    } catch (err) {
+      next(err)
+    }
+  },
+)
 
 module.exports = router

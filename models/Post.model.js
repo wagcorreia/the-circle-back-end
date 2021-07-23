@@ -11,16 +11,15 @@ const PostSchema = new Schema({
   description: {
     type: String,
     required: true,
-
     maxlength: 200,
   },
   terapiesfinding: {
     type: [String],
     required: true,
-    maxlength: 60,
+    maxlength: 200,
   },
 
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: [mongoose.Schema.Types.ObjectId], ref: 'User' },
 })
 
 const PostModel = model('Post', PostSchema)
