@@ -19,7 +19,7 @@ const PostSchema = new Schema({
     maxlength: 200,
   },
 
-  userId: { type: [mongoose.Schema.Types.ObjectId], ref: 'User' },
+  userId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 })
 
 const PostModel = model('Post', PostSchema)
