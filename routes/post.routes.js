@@ -15,7 +15,7 @@ router.post(
   attachCurrentUser,
   async (req, res, next) => {
     try {
-      const { title, description, terapiesfinding, userId } = req.body
+      const { title, description, terapiesfinding } = req.body
 
       const loggedInUser = req.currentUser
 
@@ -27,10 +27,12 @@ router.post(
       })
       console.log(newPost)
 
-      const updatePost = await PostModel.findOneAndUpdate(
-        { _id: userId },
+      const updatePost = await UserModel.findOneAndUpdate(
+        { _id: loggedInUser._id },
         { $push: { postID: newPost._id } },
       )
+      console.log(loggedInUser)
+
       if (updatePost) {
         return res.status(200).json(updatePost)
       }
@@ -40,6 +42,23 @@ router.post(
     }
   },
 )
+
+// Listar todos os posts
+router.get(
+  '/allposts',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const Allposts = await PostModel.find()
+
+      return res.status(200).json(Allposts)
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
 //ver post especifico
 router.get(
   '/post/:id',
@@ -72,7 +91,7 @@ router.delete(
       const { id } = req.params
 
       //buscar o post
-      const post = await PostModel.findOne({ _id: id })
+      const posting = await PostModel.findOne({ _id: id })
 
       // Deletar post do banco
       const deletepost = await PostModel.deleteOne({
@@ -82,7 +101,7 @@ router.delete(
       if (deletepost.n > 0) {
         // Remover o id da lista de referências do usuário
         const updateUser = await UserModel.findOneAndUpdate(
-          { _id: post.userId },
+          { _id: posting.userId },
           { $pull: { postID: id } }, // O pull remove o elemento da array dentro do banco
           { new: true },
         )
@@ -98,6 +117,32 @@ router.delete(
       }
 
       return res.status(404).json({ error: 'Post não encontrado.' })
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
+//editar post
+router.put(
+  '/post/:id',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+
+      const updatedPosting = await PostModel.findOneAndUpdate(
+        { _id: id },
+        { $set: { ...req.body } },
+        { new: true, runValidators: true },
+      )
+
+      if (updatedPosting) {
+        return res.status(200).json(updatedPosting)
+      }
+
+      return res.status(404).json({ error: 'Post não encontrado' })
     } catch (err) {
       next(err)
     }

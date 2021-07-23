@@ -9,6 +9,7 @@ const MessageModel = require('../models/Message.model')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const attachCurrentUser = require('../middlewares/attachCurrentUser')
 
+//criar nova mensagem
 router.post(
   '/message',
   isAuthenticated,
@@ -18,18 +19,18 @@ router.post(
       const { messagebody, userId_received } = req.body
 
       const loggedInUser = req.currentUser
-
+      //criando mensagem
       const newMessage = await MessageModel.create({
         userId_sending: loggedInUser._id,
         messagebody: messagebody,
         userId_received,
       })
       console.log(newMessage)
-
+      //procurando id do usuário para atualizar mensagem nele
       const updateddeletedMessage = await UserModel.findOneAndUpdate(
         { _id: userId_received },
         { $push: { messengerID: newMessage._id } },
-      )
+      ) //salvando mensagem para array do usuário
 
       if (updateddeletedMessage) {
         return res.status(200).json(updateddeletedMessage)
@@ -41,6 +42,23 @@ router.post(
     }
   },
 )
+
+// Listar todas mensagens
+router.get(
+  '/allmessages',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const allMessage = await MessageModel.find()
+
+      return res.status(200).json(allMessage)
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
 // busca uma mensagem especifica
 router.get(
   '/message/:id',
@@ -61,6 +79,7 @@ router.get(
   },
 )
 
+//deletando mensagem
 router.delete(
   '/message/:id',
   isAuthenticated,
