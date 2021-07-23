@@ -12,7 +12,7 @@ const PostSchema = new Schema({
     type: String,
     required: true,
 
-    maxlength: 60,
+    maxlength: 200,
   },
   terapiesfinding: {
     type: [String],

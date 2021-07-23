@@ -24,6 +24,8 @@ router.post(
         messagebody: messagebody,
         userId_received,
       })
+      console.log(newMessage)
+
       await UserModel.findOneAndUpdate(
         { _id: userId_received },
         { $push: { messengerID: newMessage._id } },
@@ -73,7 +75,7 @@ router.delete(
 
       await UserModel.findOneAndUpdate(
         { _id: userId_received },
-        { $pull: { messengerID: id } },
+        { $pull: { messengerID: message.id } },
       )
 
       return res.status(200).json(message)
