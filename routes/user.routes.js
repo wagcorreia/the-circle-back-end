@@ -117,4 +117,30 @@ router.get('/profile', isAuthenticated, attachCurrentUser, (req, res) => {
   }
 })
 
+// Editar usuario
+router.put(
+  '/editprofile/:id',
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+
+      const updateUser = await UserModel.findOneAndUpdate(
+        { _id: id },
+        { $set: { ...req.body } },
+        { new: true, runValidators: true },
+      )
+
+      if (updateUser) {
+        return res.status(200).json('Usuario editado com sucesso')
+      }
+
+      return res.status(404).json({ error: 'Usuario não encontrado' })
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
 module.exports = router

@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const bcrypt = require('bcryptjs')
-const saltRounds = 10
+
 const PostModel = require('../models/Post.model')
 const UserModel = require('../models/User.model')
 
@@ -93,6 +92,10 @@ router.delete(
       //buscar o post
       const posting = await PostModel.findOne({ _id: id })
 
+      if (String(req.currentUser._id) !== String(posting.userId)) {
+        return res.status(401).json({})
+      }
+
       // Deletar post do banco
       const deletepost = await PostModel.deleteOne({
         _id: id,
@@ -131,6 +134,12 @@ router.put(
   async (req, res, next) => {
     try {
       const { id } = req.params
+
+      const posting = await PostModel.findOne({ _id: id })
+
+      if (String(req.currentUser._id) !== String(posting.userId)) {
+        return res.status(401).json({})
+      }
 
       const updatedPosting = await PostModel.findOneAndUpdate(
         { _id: id },

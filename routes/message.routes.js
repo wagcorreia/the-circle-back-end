@@ -90,6 +90,16 @@ router.delete(
       //buscar a menssagem
       const messageReceived = await MessageModel.findOne({ _id: id })
 
+      console.log(
+        String(req.currentUser._id) === String(messageReceived.userId_sending),
+      )
+
+      if (
+        String(req.currentUser._id) !== String(messageReceived.userId_sending)
+      ) {
+        return res.status(401).json({})
+      }
+
       const { userId_received } = messageReceived
       // Deletar menssagem do banco
       const message = await MessageModel.deleteOne({
