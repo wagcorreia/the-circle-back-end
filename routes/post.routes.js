@@ -45,8 +45,8 @@ router.post(
 // Listar todos os posts
 router.get(
   '/allposts',
-  isAuthenticated,
-  attachCurrentUser,
+  // isAuthenticated,
+  // attachCurrentUser,
   async (req, res, next) => {
     try {
       const Allposts = await PostModel.find()

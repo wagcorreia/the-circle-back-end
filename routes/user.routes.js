@@ -117,6 +117,23 @@ router.get('/profile', isAuthenticated, attachCurrentUser, (req, res) => {
   }
 })
 
+//Listar todos usuários
+
+router.get(
+  '/allusers',
+  // isAuthenticated,
+  // attachCurrentUser,
+  async (req, res, next) => {
+    try {
+      const allusers = await UserModel.find()
+
+      return res.status(200).json(allusers)
+    } catch (err) {
+      next(err)
+    }
+  },
+)
+
 // Editar usuario
 router.put(
   '/editprofile/:id',
