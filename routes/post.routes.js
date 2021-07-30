@@ -10,32 +10,39 @@ const attachCurrentUser = require('../middlewares/attachCurrentUser')
 //criar post novo
 router.post(
   '/post',
+  //descomentar depois de login corrigido abaixo
   isAuthenticated,
   attachCurrentUser,
+  //descomentar depois de login corrigido acima
   async (req, res, next) => {
     try {
       const { title, description, terapiesfinding } = req.body
-
+      console.log(req.body)
       const loggedInUser = req.currentUser
 
       const newPost = await PostModel.create({
+        //descomentar depois de login corrigido abaixo
         userId: loggedInUser._id,
+        userName: loggedInUser.name,
+        //descomentar depois de login corrigido acima
         title: title,
         description: description,
         terapiesfinding: terapiesfinding,
       })
       console.log(newPost)
-
+      //descomentar depois de login corrigido abaixo
       const updatePost = await UserModel.findOneAndUpdate(
         { _id: loggedInUser._id },
         { $push: { postID: newPost._id } },
       )
+      //descomentar depois de login corrigido acima
       console.log(loggedInUser)
-
+      //descomentar depois de login corrigido abaixo
       if (updatePost) {
         return res.status(200).json(updatePost)
       }
-      return res.status(201).json(updatePost)
+      //descomentar depois de login corrigido acima
+      return res.status(201).json(newPost)
     } catch (err) {
       next(err)
     }
@@ -45,8 +52,10 @@ router.post(
 // Listar todos os posts
 router.get(
   '/allposts',
-  // isAuthenticated,
-  // attachCurrentUser,
+  //descomentar depois de login corrigido abaixo
+  isAuthenticated,
+  attachCurrentUser,
+  //descomentar depois de login corrigido acima
   async (req, res, next) => {
     try {
       const Allposts = await PostModel.find()

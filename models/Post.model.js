@@ -5,7 +5,7 @@ const PostSchema = new Schema({
   title: {
     type: String,
     required: true,
-    maxlength: 30,
+    maxlength: 60,
   },
 
   description: {
@@ -20,6 +20,8 @@ const PostSchema = new Schema({
   },
 
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+
+  userName: { type: String },
 })
 
 const PostModel = model('Post', PostSchema)

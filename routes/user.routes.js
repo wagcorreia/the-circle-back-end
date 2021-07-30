@@ -121,8 +121,10 @@ router.get('/profile', isAuthenticated, attachCurrentUser, (req, res) => {
 
 router.get(
   '/allusers',
-  // isAuthenticated,
-  // attachCurrentUser,
+  //descomentar depois de login corrigido abaixo
+  isAuthenticated,
+  attachCurrentUser,
+  //descomentar depois de login corrigido acima
   async (req, res, next) => {
     try {
       const allusers = await UserModel.find()
