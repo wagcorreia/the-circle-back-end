@@ -22,6 +22,7 @@ router.post(
       //criando mensagem
       const newMessage = await MessageModel.create({
         userId_sending: loggedInUser._id,
+        userName_sending: loggedInUser.name,
         messagebody: messagebody,
         userId_received,
       })
@@ -137,6 +138,23 @@ router.delete(
       next(err)
     }
   },
+
+  router.get(
+    '/user-received-messages',
+    isAuthenticated,
+    attachCurrentUser,
+    async (req, res, next) => {
+      try {
+        const receivedMessage = await MessageModel.find({
+          userId_received: req.currentUser,
+        })
+        console.log('receivedMessage', { receivedMessage })
+        return res.status(200).json(receivedMessage)
+      } catch (err) {
+        next(err)
+      }
+    },
+  ),
 )
 
 module.exports = router

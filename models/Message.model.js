@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose')
-const mongoose = require('mongoose')
+const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
 const MessageSchema = new Schema({
   messagebody: {
@@ -8,11 +8,13 @@ const MessageSchema = new Schema({
     maxlength: 512,
   },
 
-  userId_received: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  userId_received: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
-  userId_sending: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-})
+  userId_sending: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
-const MessageModel = model('Message', MessageSchema)
+  userName_sending: { type: String, ref: "User" },
+});
 
-module.exports = MessageModel
+const MessageModel = model("Message", MessageSchema);
+
+module.exports = MessageModel;
