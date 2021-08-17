@@ -11,6 +11,7 @@ const UserSchema = new Schema({
     lowercase: true,
   },
   passwordHash: { type: String, required: true },
+  profilePictureUrl: {type: String, trim: true },
   occupation: { type: String, required: true },
   location: { type: String },
 
